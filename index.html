@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Manifest — global supply chain and ESG news tracked through a sustainability lens, with a hands-on SAP Sourcing &amp; Procurement and Ariba primer.">
+<title>The Manifest — Global Supply Chain &amp; Sustainability Dispatch</title>
+<style>
+  /* ---------- Design tokens ---------- */
+  :root{
+    --bg:#ECE7D9; --bg-raised:#F5F2E8; --bg-sunken:#DFD9C6;
+    --fg:#17221D; --fg-muted:#4B5750; --fg-faint:#7A8379;
+    --line:rgba(23,34,29,0.16); --line-strong:rgba(23,34,29,0.32);
+    --accent:#C9622A; --accent-ink:#FFFBF4;
+    --sustain:#3C6E4F; --sustain-ink:#FFFFFF;
+    --data:#1D6B72;
+    --shadow: 0 1px 0 rgba(23,34,29,0.06);
+    --ink-fixed:#0E1A17; --paper-fixed:#E9E4D5; --line-fixed:rgba(233,228,213,0.16);
+    --font-display:'Segoe UI Semibold','Segoe UI',-apple-system,'Helvetica Neue',Arial,sans-serif;
+    --font-body:'Segoe UI',-apple-system,'Helvetica Neue',Arial,sans-serif;
+    --font-mono:'Cascadia Code',Consolas,'SFMono-Regular',Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0E1A17; --bg-raised:#142723; --bg-sunken:#0A1512;
+      --fg:#E9E4D5; --fg-muted:#9FAAA0; --fg-faint:#6C776E;
+      --line:rgba(233,228,213,0.14); --line-strong:rgba(233,228,213,0.28);
+      --accent:#E08544; --accent-ink:#16110A;
+      --sustain:#6FA97F; --sustain-ink:#0C1A10;
+      --data:#4FB6BE;
+      --shadow: 0 1px 0 rgba(0,0,0,0.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1A17; --bg-raised:#142723; --bg-sunken:#0A1512;
+    --fg:#E9E4D5; --fg-muted:#9FAAA0; --fg-faint:#6C776E;
+    --line:rgba(233,228,213,0.14); --line-strong:rgba(233,228,213,0.28);
+    --accent:#E08544; --accent-ink:#16110A;
+    --sustain:#6FA97F; --sustain-ink:#0C1A10;
+    --data:#4FB6BE;
+    --shadow: 0 1px 0 rgba(0,0,0,0.4);
+  }
+  :root[data-theme="light"]{
+    --bg:#ECE7D9; --bg-raised:#F5F2E8; --bg-sunken:#DFD9C6;
+    --fg:#17221D; --fg-muted:#4B5750; --fg-faint:#7A8379;
+    --line:rgba(23,34,29,0.16); --line-strong:rgba(23,34,29,0.32);
+    --accent:#C9622A; --accent-ink:#FFFBF4;
+    --sustain:#3C6E4F; --sustain-ink:#FFFFFF;
+    --data:#1D6B72;
+    --shadow: 0 1px 0 rgba(23,34,29,0.06);
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-font-smoothing:antialiased; scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--bg); color:var(--fg);
+    font-family:var(--font-body); font-size:16px; line-height:1.65;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,h4{font-family:var(--font-display); font-weight:700; text-wrap:balance; margin:0; letter-spacing:-0.015em;}
+  a{color:var(--data);}
+  ::selection{background:var(--accent); color:var(--accent-ink);}
+  .wrap{max-width:1120px; margin:0 auto; padding:0 28px;}
+  .eyebrow{
+    font-family:var(--font-mono); font-size:11.5px; letter-spacing:0.16em; text-transform:uppercase;
+    color:var(--fg-faint);
+  }
+  .stamp{color:var(--accent); font-weight:700;}
+  .rule{border:none; border-top:1px solid var(--line); margin:0;}
+  button{font-family:inherit;}
+  code,.num,.eyebrow,.hero-stat b,.primer-stat b,.file-stat b{font-variant-numeric:tabular-nums;}
+  :focus-visible{outline:2px solid var(--data); outline-offset:2px;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;} }
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    position:sticky; top:0; z-index:40; background:var(--bg);
+    border-bottom:1px solid var(--line); backdrop-filter:blur(6px);
+  }
+  .masthead-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:13px 28px; max-width:1120px; margin:0 auto; gap:16px;
+  }
+  .brand{display:flex; align-items:baseline; gap:12px; min-width:0; flex-shrink:1;}
+  .brand-mark{
+    font-family:var(--font-display); font-size:19px; letter-spacing:0.05em;
+    text-transform:uppercase; font-weight:700; white-space:nowrap; flex-shrink:0;
+  }
+  .brand-sub{font-family:var(--font-mono); font-size:10.5px; color:var(--fg-faint); letter-spacing:0.08em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  nav{display:flex; gap:16px; font-family:var(--font-mono); font-size:11.5px; letter-spacing:0.04em; text-transform:uppercase; flex-wrap:wrap; justify-content:flex-end; flex-shrink:0;}
+  nav a{color:var(--fg-muted); text-decoration:none; border-bottom:1px solid transparent; padding-bottom:3px; transition:color 0.15s ease, border-color 0.15s ease;}
+  nav a:hover{color:var(--fg); border-color:var(--accent);}
+  .coord{font-family:var(--font-mono); font-size:10.5px; color:var(--fg-faint); text-align:right; line-height:1.45; font-variant-numeric:tabular-nums; flex-shrink:0;}
+  @media (max-width:1360px){ .brand-sub{display:none;} }
+  @media (max-width:760px){ nav{display:none;} }
+
+  /* ---------- Hero (deliberately fixed dark "chart room") ---------- */
+  .hero{
+    position:relative; background:var(--ink-fixed); color:var(--paper-fixed);
+    overflow:hidden; border-bottom:1px solid var(--line-fixed);
+  }
+  .hero canvas{position:absolute; inset:0; width:100%; height:100%; opacity:0.75;}
+  .hero-inner{position:relative; z-index:2; padding:88px 28px 64px; max-width:1120px; margin:0 auto;}
+  .hero .eyebrow{color:#E08544;}
+  .hero h1{
+    font-size:clamp(34px,5vw,60px); line-height:1.05; letter-spacing:-0.025em; margin:16px 0 20px; max-width:17ch;
+  }
+  .hero h1 em{font-style:normal; color:#6FA97F;}
+  .hero p{
+    font-family:var(--font-body); font-size:17.5px; line-height:1.7; max-width:54ch; color:#C8CFC5; margin:0 0 36px;
+  }
+  .hero-stats{display:flex; gap:0; flex-wrap:wrap; border-top:1px solid rgba(233,228,213,0.18); margin-top:8px;}
+  .hero-stat{padding:18px 32px 4px 0; margin-right:32px; border-right:1px solid rgba(233,228,213,0.18); min-width:160px; max-width:280px;}
+  .hero-stat:last-child{border-right:none; margin-right:0;}
+  .hero-stat b{display:block; font-family:var(--font-mono); font-size:24px; color:#E08544; font-weight:600; margin-bottom:2px;}
+  .hero-stat span{font-size:12px; color:#9FAAA0; font-family:var(--font-mono); line-height:1.55; display:block;}
+
+  /* ---------- Section scaffolding ---------- */
+  main > section{padding:76px 0;}
+  main > section + section{border-top:1px solid var(--line);}
+  .section-head{display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-bottom:34px; flex-wrap:wrap;}
+  .section-head h2{font-size:clamp(26px,3.2vw,34px); margin-top:10px;}
+  .section-head p{color:var(--fg-muted); max-width:52ch; margin:12px 0 0; font-size:15.5px; line-height:1.65;}
+  .num{font-family:var(--font-mono); color:var(--fg-faint); font-size:12px; letter-spacing:0.06em;}
+
+  /* ---------- Dispatch board (news) ---------- */
+  .board{background:var(--bg-raised); border:1px solid var(--line); border-radius:2px;}
+  .board-head{
+    display:flex; align-items:center; justify-content:space-between; padding:16px 22px;
+    border-bottom:1px solid var(--line); flex-wrap:wrap; gap:12px;
+  }
+  .tabs{display:flex; gap:4px; flex-wrap:wrap;}
+  .tab{
+    font-family:var(--font-mono); font-size:11.5px; letter-spacing:0.05em; text-transform:uppercase;
+    background:none; border:1px solid var(--line); color:var(--fg-muted); padding:7px 13px;
+    cursor:pointer; border-radius:2px; transition:color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+  .tab:hover{border-color:var(--line-strong); color:var(--fg);}
+  .tab[aria-selected="true"]{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+  .live-dot{width:7px; height:7px; border-radius:50%; background:var(--sustain); display:inline-block; margin-right:7px; animation:pulse 2.2s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;} 50%{opacity:0.35;}}
+  .board-meta{font-family:var(--font-mono); font-size:11.5px; color:var(--fg-faint); display:flex; align-items:center;}
+  .dispatch-list{list-style:none; margin:0; padding:0;}
+  .dispatch{
+    display:grid; grid-template-columns:100px 1fr auto; gap:20px; align-items:start;
+    padding:19px 22px; border-bottom:1px solid var(--line); transition:background 0.15s ease;
+  }
+  .dispatch:hover{background:var(--bg);}
+  .dispatch:last-child{border-bottom:none;}
+  .dispatch-code{font-family:var(--font-mono); font-size:11.5px; color:var(--data); padding-top:3px; line-height:1.6; font-variant-numeric:tabular-nums;}
+  .dispatch h3{font-family:var(--font-display); font-weight:700; font-size:16.5px; margin-bottom:5px; letter-spacing:-0.01em;}
+  .dispatch p{margin:0; color:var(--fg-muted); font-size:14.5px; max-width:66ch;}
+  .dispatch-tag{
+    font-family:var(--font-mono); font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--sustain); border:1px solid var(--line-strong); padding:4px 8px; white-space:nowrap; height:fit-content;
+  }
+  .dispatch-tag.freight{color:var(--accent);}
+  .dispatch-tag.risk{color:#B33A3A;}
+  .board-foot{padding:14px 22px; font-family:var(--font-mono); font-size:11.5px; color:var(--fg-faint); border-top:1px solid var(--line);}
+  @media (max-width:640px){ .dispatch{grid-template-columns:1fr; gap:8px;} .dispatch-code{display:none;} }
+
+  /* ---------- Sustainability dossier ---------- */
+  .dossier{display:flex; flex-direction:column; gap:1px; background:var(--line); border:1px solid var(--line);}
+  .file{background:var(--bg); padding:0;}
+  .file-head{
+    width:100%; display:grid; grid-template-columns:64px 1fr auto; align-items:center; gap:18px;
+    padding:20px 22px; background:none; border:none; text-align:left; cursor:pointer; color:var(--fg);
+    transition:background 0.15s ease;
+  }
+  .file-head:hover{background:var(--bg-raised);}
+  .file-id{font-family:var(--font-mono); color:var(--sustain); font-size:12.5px; border:1px solid var(--sustain); padding:6px 4px; text-align:center; border-radius:2px;}
+  .file-head h3{font-size:19px;}
+  .file-head .file-sub{font-family:var(--font-mono); font-size:12px; color:var(--fg-faint); display:block; margin-top:4px; font-weight:400;}
+  .chevron{font-family:var(--font-mono); color:var(--fg-faint); font-size:18px; transition:transform 0.2s ease;}
+  .file[data-open="true"] .chevron{transform:rotate(45deg);}
+  .file-body{max-height:0; overflow:hidden; transition:max-height 0.3s ease;}
+  .file[data-open="true"] .file-body{max-height:900px;}
+  .file-body-inner{padding:0 22px 30px 104px; display:grid; grid-template-columns:1fr 220px; gap:32px;}
+  .file-body-inner p{color:var(--fg-muted); font-size:15.5px; margin:0 0 14px;}
+  .file-body-inner p:last-child{margin-bottom:0;}
+  .file-stat{border-left:2px solid var(--sustain); padding-left:14px; margin-bottom:18px;}
+  .file-stat b{display:block; font-family:var(--font-mono); font-size:24px; color:var(--fg);}
+  .file-stat span{font-size:12.5px; color:var(--fg-faint);}
+  @media (max-width:760px){ .file-body-inner{grid-template-columns:1fr; padding-left:22px;} .file-head{grid-template-columns:44px 1fr auto;} }
+
+  /* ---------- Signal map ---------- */
+  .sdg-key{display:flex; gap:20px; flex-wrap:wrap; margin-bottom:22px; font-family:var(--font-mono); font-size:11.5px; color:var(--fg-faint);}
+  .sdg-key span{display:inline-flex; align-items:center; gap:7px;}
+  .sdg-key i{width:9px; height:9px; border-radius:50%; display:inline-block; background:var(--sustain);}
+  .sdg-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line);}
+  .sdg-tile{background:var(--bg-raised); padding:18px 18px 16px; display:flex; flex-direction:column; gap:8px; position:relative; transition:background 0.15s ease;}
+  .sdg-tile:hover{background:var(--bg);}
+  .sdg-tile.core{box-shadow:inset 0 0 0 1px var(--sustain);}
+  .sdg-num{font-family:var(--font-mono); font-size:12px; color:var(--fg-faint);}
+  .sdg-tile.core .sdg-num{color:var(--sustain);}
+  .sdg-name{font-family:var(--font-body); font-weight:700; font-size:15.5px; line-height:1.25;}
+  .sdg-desc{font-size:13px; color:var(--fg-muted); line-height:1.5; flex:1; margin:0;}
+  .file-link{font-family:var(--font-mono); font-size:11px; color:var(--sustain); text-decoration:none; border-top:1px solid var(--line); padding-top:9px; margin-top:2px; display:block;}
+  .file-link:hover{text-decoration:underline;}
+  .ariba-tie{margin-top:32px; max-width:60ch; font-size:12px; border:none; padding-top:0;}
+  .sdg-badge{position:absolute; top:16px; right:16px; font-family:var(--font-mono); font-size:9px; letter-spacing:0.08em; color:var(--sustain); border:1px solid var(--sustain); padding:2px 6px; border-radius:2px;}
+
+  /* ---------- SAP Primer ---------- */
+  .primer-lead{display:grid; grid-template-columns:1.5fr 1fr; gap:44px; margin-bottom:8px;}
+  .primer-lead p{color:var(--fg-muted); font-size:16.5px; margin:0 0 15px;}
+  .primer-lead p:last-child{margin-bottom:0;}
+  .primer-lead strong{color:var(--fg);}
+  .primer-stats{border:1px solid var(--line); background:var(--bg-raised); height:fit-content;}
+  .primer-stat{padding:18px 20px; border-bottom:1px solid var(--line);}
+  .primer-stat:last-child{border-bottom:none;}
+  .primer-stat b{display:block; font-family:var(--font-mono); font-size:23px; color:var(--data); font-weight:600;}
+  .primer-stat span{font-size:12.5px; color:var(--fg-faint); font-family:var(--font-mono); line-height:1.5; display:block; margin-top:4px;}
+  @media (max-width:820px){ .primer-lead{grid-template-columns:1fr;} }
+
+  .block-label{display:flex; align-items:baseline; gap:16px; margin:56px 0 20px; flex-wrap:wrap; row-gap:8px;}
+  .block-label h3{font-size:23px;}
+  .block-label span{font-size:12px; white-space:nowrap;}
+  .block-label::after{content:''; flex:1; min-width:40px; height:1px; background:var(--line); align-self:center;}
+  @media (max-width:480px){ .block-label{margin-top:44px;} .block-label h3{font-size:20px;} }
+
+  .flow{border:1px solid var(--line); background:var(--bg-raised);}
+  .flow-step{display:grid; grid-template-columns:34px 92px 1fr; gap:18px; align-items:start; padding:16px 22px; border-top:1px solid var(--line);}
+  .flow-step:first-child{border-top:none;}
+  .flow-num{font-family:var(--font-mono); font-size:12.5px; color:var(--fg-faint); padding-top:5px;}
+  .flow-code{font-family:var(--font-mono); font-size:12px; color:var(--data); border:1px solid var(--data); border-radius:2px; padding:5px 6px; text-align:center; height:fit-content;}
+  .flow-step h4{font-family:var(--font-body); font-weight:700; font-size:16px; margin-bottom:4px;}
+  .flow-step p{margin:0; color:var(--fg-muted); font-size:14.5px;}
+  @media (max-width:640px){ .flow-step{grid-template-columns:auto auto; row-gap:8px;} .flow-step > div{grid-column:1/-1;} }
+
+  .ledger{border:1px solid var(--line); background:var(--bg-raised);}
+  .ledger-group + .ledger-group{border-top:1px solid var(--line);}
+  .ledger-group-label{font-family:var(--font-mono); font-size:11px; letter-spacing:0.09em; text-transform:uppercase; color:var(--fg-faint); padding:16px 22px 6px;}
+  .ledger-row{display:grid; grid-template-columns:112px 1fr 2fr; gap:18px; padding:11px 22px; align-items:baseline;}
+  .ledger-row + .ledger-row{border-top:1px solid var(--line);}
+  .ledger-code{font-family:var(--font-mono); font-size:13px; color:var(--data); font-weight:600;}
+  .ledger-name{font-size:14.5px; font-weight:600; color:var(--fg);}
+  .ledger-desc{font-size:14px; color:var(--fg-muted);}
+  @media (max-width:700px){ .ledger-row{grid-template-columns:1fr; gap:3px; align-items:start;} }
+
+  .case-panel{border:1px solid var(--line); background:var(--bg-raised); padding:26px 26px 6px;}
+  .case-brief{font-size:15px; color:var(--fg-muted); margin:0 0 28px; padding-bottom:24px; border-bottom:1px solid var(--line);}
+  .case-brief strong{color:var(--fg);}
+  .case-timeline{position:relative; padding-left:32px;}
+  .case-timeline::before{content:''; position:absolute; left:10px; top:6px; bottom:6px; width:1px; background:var(--line-strong);}
+  .case-step{position:relative; padding-bottom:28px;}
+  .case-step:last-child{padding-bottom:2px;}
+  .case-step::before{content:''; position:absolute; left:-32px; top:3px; width:9px; height:9px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 3px var(--bg-raised);}
+  .case-step-head{display:flex; align-items:baseline; gap:10px; margin-bottom:6px; flex-wrap:wrap;}
+  .case-step-head h4{font-size:16.5px;}
+  .case-step-code{font-family:var(--font-mono); font-size:11px; color:var(--data); border:1px solid var(--line-strong); padding:3px 7px; border-radius:2px;}
+  .case-step p{margin:0; color:var(--fg-muted); font-size:14.5px; max-width:66ch;}
+
+  /* ---------- Glossary ---------- */
+  .glossary{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line);}
+  .term{background:var(--bg); padding:20px 22px;}
+  .term dt{font-family:var(--font-mono); font-size:13px; color:var(--accent); letter-spacing:0.03em; margin-bottom:8px;}
+  .term dd{margin:0; font-size:14.5px; color:var(--fg-muted); line-height:1.55;}
+
+  /* ---------- Footer / subscribe ---------- */
+  footer{background:var(--bg-sunken); border-top:1px solid var(--line);}
+  .sub-panel{display:flex; justify-content:space-between; gap:32px; padding:56px 0; flex-wrap:wrap;}
+  .sub-panel h2{font-size:30px; max-width:14ch;}
+  .sub-form{display:flex; gap:0; max-width:380px; width:100%; border:1px solid var(--line-strong);}
+  .sub-form input{
+    flex:1; border:none; background:transparent; padding:14px 16px; font-family:var(--font-mono);
+    font-size:13px; color:var(--fg); min-width:0;
+  }
+  .sub-form input:focus{outline:none;}
+  .sub-form{transition:border-color 0.15s ease;}
+  .sub-form:focus-within{border-color:var(--accent);}
+  .sub-form button{
+    border:none; background:var(--accent); color:var(--accent-ink); padding:0 20px;
+    font-family:var(--font-mono); font-size:12px; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;
+    transition:filter 0.15s ease;
+  }
+  .sub-form button:hover{filter:brightness(1.08);}
+  .sub-note{font-size:12.5px; color:var(--fg-faint); margin-top:10px; font-family:var(--font-mono);}
+  .foot-bottom{
+    display:flex; justify-content:space-between; padding:22px 0 34px; border-top:1px solid var(--line);
+    font-family:var(--font-mono); font-size:11.5px; color:var(--fg-faint); flex-wrap:wrap; gap:10px;
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-row">
+    <div class="brand">
+      <span class="brand-mark">The Manifest</span>
+      <span class="brand-sub">VOL. 01 · SUPPLY CHAIN &amp; SUSTAINABILITY DISPATCH</span>
+    </div>
+    <nav>
+      <a href="#board">Dispatch</a>
+      <a href="#esg">ESG Wire</a>
+      <a href="#dossier">Dossier</a>
+      <a href="#map">Signal Map</a>
+      <a href="#sap">SAP Primer</a>
+      <a href="#ariba">Ariba</a>
+      <a href="#glossary">Glossary</a>
+    </nav>
+    <div class="coord" id="clock">—<br>—</div>
+  </div>
+</header>
+
+<section class="hero">
+  <canvas id="routeCanvas"></canvas>
+  <div class="hero-inner">
+    <div class="eyebrow">Global trade, tracked through a sustainability lens</div>
+    <h1>Every shipment leaves<br><em>two trails.</em><br>We follow both.</h1>
+    <p>The Manifest reads global supply chains the way a port authority reads a manifest — line by line — then asks the question most dispatches skip: what did this route cost the planet, and who paid for the cheap version first.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><b>&gt;90%</b><span>of a consumer-goods firm's footprint sits in Scope 3 — its supply chain (CDP)</span></div>
+      <div class="hero-stat"><b>4</b><span>regions monitored — APAC, Europe, Americas, MEA</span></div>
+      <div class="hero-stat"><b>9</b><span>open case files in the sustainability dossier</span></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+<section id="board">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Section 01</span>
+      <h2>The Dispatch Board</h2>
+      <p>Standing currents in global freight and sourcing — the slow-moving stories behind the week's headlines, filed by region.</p>
+    </div>
+    <span class="num">4 REGIONS / 12 BRIEFS</span>
+  </div>
+
+  <div class="board">
+    <div class="board-head">
+      <div class="tabs" role="tablist" id="regionTabs">
+        <button class="tab" role="tab" aria-selected="true" data-key="apac">Asia-Pacific</button>
+        <button class="tab" role="tab" aria-selected="false" data-key="europe">Europe</button>
+        <button class="tab" role="tab" aria-selected="false" data-key="americas">Americas</button>
+        <button class="tab" role="tab" aria-selected="false" data-key="mea">Middle East &amp; Africa</button>
+      </div>
+      <div class="board-meta" id="boardMeta"><span class="live-dot"></span>Standing briefs — updated manually, see note below</div>
+    </div>
+    <ul class="dispatch-list" id="dispatchList"></ul>
+    <div class="board-foot" id="boardFoot">This board is a hand-curated template, not a live feed — wire it to a news or trade-data API (see netlify/functions/news.js) to pull real headlines automatically.</div>
+  </div>
+</section>
+
+<section id="esg">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Section 02</span>
+      <h2>The ESG Wire</h2>
+      <p>The same live-feed machinery as the Dispatch Board, pointed at global ESG and sustainability coverage instead of freight — filed by theme rather than region.</p>
+    </div>
+    <span class="num">4 THEMES / 12 BRIEFS</span>
+  </div>
+
+  <div class="board">
+    <div class="board-head">
+      <div class="tabs" role="tablist" id="esgTabs">
+        <button class="tab" role="tab" aria-selected="true" data-key="climate">Climate &amp; Emissions</button>
+        <button class="tab" role="tab" aria-selected="false" data-key="governance">Governance &amp; Disclosure</button>
+        <button class="tab" role="tab" aria-selected="false" data-key="social">Social &amp; Labor</button>
+        <button class="tab" role="tab" aria-selected="false" data-key="finance">Green Finance</button>
+      </div>
+      <div class="board-meta" id="esgBoardMeta"><span class="live-dot"></span>Standing briefs — updated manually, see note below</div>
+    </div>
+    <ul class="dispatch-list" id="esgList"></ul>
+    <div class="board-foot" id="esgBoardFoot">This board is a hand-curated template, not a live feed — wire it to a news or trade-data API to pull real headlines automatically.</div>
+  </div>
+</section>
+
+<section id="dossier">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Section 03</span>
+      <h2>The Sustainability Dossier</h2>
+      <p>Nine open case files on what "sustainable supply chain" actually requires underneath the label — decarbonization, circularity, sourcing ethics, resilience, regulation, water, packaging, labor, and the technology stitching it together.</p>
+    </div>
+    <span class="num">EXPAND EACH FILE</span>
+  </div>
+  <div class="dossier" id="dossierList"></div>
+</section>
+
+<section id="map">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Section 04</span>
+      <h2>Signal Map</h2>
+      <p>Not a literal map anymore — the 17 UN Sustainable Development Goals, and which ones a supply-chain briefing like this one actually has leverage over. Seven are outlined and linked back to a dossier case file; the other ten are shown for context.</p>
+    </div>
+    <span class="num">17 GOALS / 7 CORE</span>
+  </div>
+  <div class="sdg-key">
+    <span><i></i>Outlined = core to supply-chain work, linked to a dossier file</span>
+  </div>
+  <div class="sdg-grid" id="sdgGrid"></div>
+</section>
+
+<section id="sap">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Section 05</span>
+      <h2>The SAP Primer</h2>
+      <p>The Dispatch Board and the Dossier describe what happens to freight and materials in the world. This is where it gets recorded — inside the system most large supply chains actually run on.</p>
+    </div>
+    <span class="num">37 T-CODES / 1 WALKTHROUGH</span>
+  </div>
+
+  <div class="primer-lead">
+    <div>
+      <p>SAP is not the only enterprise resource planning platform in use, but by transaction volume it is the largest by a wide margin — SAP itself states that <strong>77% of the world's transaction revenue touches an SAP system</strong> at some point. For a supply chain professional, that makes SAP less of a "nice to know" and more of a lingua franca: the material master, the purchase order, and the goods receipt you'll work with at one company are structurally the same ones you'll work with at the next.</p>
+      <p><strong>Sourcing and Procurement</strong> is SAP's current name for the line of business that used to be called <strong>MM — Materials Management</strong> back in the SAP R/3 and ECC days. The rebrand under S/4HANA didn't change the transactional core; it folded in sourcing, contract management, and supplier collaboration around the same Procure-to-Pay backbone. It covers four things: the <strong>master data</strong> that identifies materials and vendors, the <strong>purchasing</strong> process that turns a need into an order, the <strong>inventory management</strong> that tracks what physically arrives, and the <strong>invoice verification</strong> that reconciles what was ordered against what's paid for — with every step posting straight into Finance (FI), and feeding Production Planning (PP), Sales (SD), and Warehouse Management on either side.</p>
+    </div>
+    <div class="primer-stats">
+      <div class="primer-stat"><b>77%</b><span>of the world's transaction revenue touches an SAP system, per SAP's own figures</span></div>
+      <div class="primer-stat"><b>MM → S/4</b><span>Materials Management, SAP's module name since the early 1990s, is now branded Sourcing &amp; Procurement</span></div>
+      <div class="primer-stat"><b>3</b><span>master data objects anchor the whole process: Material, Vendor, Purchasing Info Record</span></div>
+    </div>
+  </div>
+
+  <div class="block-label"><h3>The Procure-to-Pay Flow</h3><span class="num">8 STEPS</span></div>
+  <div class="flow" id="flowList"></div>
+
+  <div class="block-label"><h3>The T-Code Ledger</h3><span class="num">FOR REFERENCE</span></div>
+  <div class="ledger" id="ledgerList"></div>
+
+  <div class="block-label"><h3>Case File — Sourcing Steel Coil</h3><span class="num">ILLUSTRATIVE WALKTHROUGH</span></div>
+  <div class="case-panel">
+    <p class="case-brief"><strong>Meridian Fabrication</strong> (illustrative, not a real company) runs one production line turning hot-rolled steel coil into structural brackets. Here's what actually happens in the system when that line is two weeks from running out of coil — including the exception that almost always shows up somewhere in a real cycle.</p>
+    <div class="case-timeline" id="caseTimeline"></div>
+  </div>
+</section>
+
+<section id="ariba">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Section 06</span>
+      <h2>SAP Ariba</h2>
+      <p>The SAP Primer covers the operational core — the PO, the goods receipt, the invoice. Ariba is the layer sitting in front of it: strategic sourcing, supplier collaboration, and the network connecting a buyer to millions of suppliers before any of that transactional machinery starts.</p>
+    </div>
+    <span class="num">SOURCING LAYER</span>
+  </div>
+
+  <div class="primer-lead">
+    <div>
+      <p><strong>SAP Ariba</strong> is SAP's cloud suite for strategic sourcing, contract management, and supplier risk — the work that happens before a purchase order exists: running RFPs and auctions, negotiating and storing contracts, and vetting a supplier before they ever touch the S/4HANA procure-to-pay flow described above. The connectivity layer underneath it, historically called the Ariba Network, was folded into <strong>SAP Business Network</strong> in 2021; "Ariba" today refers to the application suite, while Business Network is the pipe millions of buyers and suppliers actually transact over.</p>
+      <p>That network is genuinely large: SAP and its partners put it at over five million connected buyers and suppliers, more than 14 million users, and upward of $3 trillion in annual commerce flowing across roughly 190 countries — a figure SAP has grown steadily for over a decade and has repeatedly described as exceeding the combined commerce volume of major consumer marketplaces like eBay, Amazon, and Alibaba. For a buyer, that scale is the whole pitch: a supplier already onboarded to Ariba for one customer is usually one click from trading with the next.</p>
+    </div>
+    <div class="primer-stats">
+      <div class="primer-stat"><b>$3T+</b><span>in annual commerce moves across SAP Business Network, per SAP's published figures</span></div>
+      <div class="primer-stat"><b>5M+</b><span>buyers and suppliers connected across roughly 190 countries</span></div>
+      <div class="primer-stat"><b>40–80%</b><span>of a typical company's Scope 3 emissions trace back to procurement decisions — Ariba's actual sustainability lever</span></div>
+    </div>
+  </div>
+
+  <div class="block-label"><h3>What's Advancing Right Now</h3><span class="num">JOULE / AI AGENTS</span></div>
+  <div class="flow" id="aribaFlow"></div>
+
+  <div class="block-label"><h3>Ariba vs. the Operational Core</h3><span class="num">HOW THE TWO FIT TOGETHER</span></div>
+  <div class="ledger" id="aribaLedger"></div>
+
+  <a class="file-link ariba-tie" href="#F-01">Case File F-01 — Decarbonization: why procurement is the biggest lever a company actually has →</a>
+</section>
+
+<section id="glossary">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Section 07</span>
+      <h2>Field Glossary</h2>
+      <p>The dossier's vocabulary, defined plainly — for readers new to the field.</p>
+    </div>
+    <span class="num">8 TERMS</span>
+  </div>
+  <dl class="glossary" id="glossaryList"></dl>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="sub-panel">
+      <h2>Get the next dispatch.</h2>
+      <div>
+        <form class="sub-form" id="subForm">
+          <input type="email" placeholder="you@company.com" required aria-label="Email address" />
+          <button type="submit">Subscribe</button>
+        </form>
+        <div class="sub-note" id="subNote">Front-end only for now — connect this form to your email provider to make it real.</div>
+      </div>
+    </div>
+    <hr class="rule" />
+    <div class="foot-bottom">
+      <span>THE MANIFEST — filed from a home office, for the record.</span>
+      <span id="footStamp">—</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // ---------- Clock / stamp ----------
+  function stamp(){
+    var d = new Date();
+    var opts = {year:'numeric',month:'short',day:'2-digit'};
+    var dateTxt = d.toLocaleDateString('en-GB', opts).toUpperCase();
+    var hh = String(d.getUTCHours()).padStart(2,'0');
+    var mm = String(d.getUTCMinutes()).padStart(2,'0');
+    var ss = String(d.getUTCSeconds()).padStart(2,'0');
+    document.getElementById('clock').innerHTML = dateTxt + '<br>' + hh + ':' + mm + ':' + ss + ' UTC';
+    document.getElementById('footStamp').textContent = 'LAST FILED ' + dateTxt + ' · ' + hh + ':' + mm + ' UTC';
+  }
+  stamp(); setInterval(stamp, 1000);
+
+  // ---------- Dispatch board data (region-filed freight & sourcing briefs) ----------
+  var dispatches = {
+    apac: [
+      {code:'CN–EU / 04', tag:'freight', tagLabel:'Freight', title:'China+1 keeps reshaping Southeast Asian ports', body:'Manufacturers diversifying out of single-country sourcing continue to route new capacity through Vietnam, Malaysia, and India, pushing port and customs infrastructure in those corridors past its comfortable capacity.'},
+      {code:'JP–KR / 02', tag:'risk', tagLabel:'Resilience', title:'Semiconductor lanes stay concentrated despite years of diversification talk', body:'Advanced chip fabrication remains geographically narrow, keeping a handful of ports and a handful of firms as single points of failure for a large share of global electronics output.'},
+      {code:'IN–GLB / 07', tag:'freight', tagLabel:'Freight', title:'India’s port capacity build-out is now a live bottleneck test', body:'Export volumes are growing faster than turnaround times at several major terminals, and the gap is starting to show up as scheduling risk further down client supply chains.'}
+    ],
+    europe: [
+      {code:'EU–REG / 11', tag:'sustain', tagLabel:'Regulation', title:'CBAM’s reporting phase is quietly rewriting supplier contracts', body:'The EU Carbon Border Adjustment Mechanism’s transition period is pushing importers to demand embedded-emissions data from suppliers who have never had to produce it before — well ahead of the mechanism’s financial phase-in.'},
+      {code:'EU–REG / 12', tag:'sustain', tagLabel:'Regulation', title:'CSRD disclosure is pulling Scope 3 data requests deep into supplier tiers', body:'Corporate Sustainability Reporting Directive obligations are forcing large EU-listed firms to chase emissions data from tier-2 and tier-3 suppliers who were previously outside their reporting reach.'},
+      {code:'DE–NL / 05', tag:'freight', tagLabel:'Freight', title:'Rhine water levels remain a recurring freight risk, not a one-off', body:'Low-water disruption on the Rhine has become frequent enough that shippers are treating barge capacity as seasonally unreliable rather than exceptional, and shifting volume to rail earlier each year.'}
+    ],
+    americas: [
+      {code:'MX–US / 09', tag:'freight', tagLabel:'Freight', title:'Nearshoring to Mexico is now a capacity story, not a policy story', body:'The conversation has moved past whether firms will nearshore to whether Mexican industrial parks, power grids, and cross-border rail can absorb the volume already committed.'},
+      {code:'US–REG / 03', tag:'risk', tagLabel:'Compliance', title:'Forced-labor import bans are forcing supply-chain mapping past tier one', body:'Enforcement under forced-labor import restrictions is requiring importers to trace raw-material origin multiple tiers upstream, a mapping exercise most compliance teams had never previously completed.'},
+      {code:'PA–GLB / 06', tag:'risk', tagLabel:'Resilience', title:'Panama Canal drought risk is now a standing line item in routing decisions', body:'Recurring low-water transit restrictions have pushed some carriers to keep a standing Cape Horn or Suez contingency plan rather than treating rerouting as a rare emergency measure.'}
+    ],
+    mea: [
+      {code:'RS–GLB / 01', tag:'risk', tagLabel:'Resilience', title:'Red Sea rerouting around the Cape has become the new baseline, not a detour', body:'Extended transit times via the Cape of Good Hope have persisted long enough that Asia–Europe schedules are now built around the longer route by default, with knock-on effects for container availability worldwide.'},
+      {code:'AF–MIN / 08', tag:'sustain', tagLabel:'Sourcing', title:'Battery-mineral sourcing in Central Africa faces mounting traceability demands', body:'Buyers of cobalt and other battery minerals are under growing pressure to prove artisanal-mining conditions meet due-diligence standards, a demand the current certification infrastructure only partly meets.'},
+      {code:'GCC–EU / 10', tag:'freight', tagLabel:'Freight', title:'Gulf transshipment hubs are absorbing rerouted Red Sea volume', body:'Ports in the Gulf are seeing outsized growth in transshipment traffic as carriers restructure Asia–Europe strings around the region rather than through the Suez corridor.'}
+    ]
+  };
+
+  // ---------- ESG Wire data (theme-filed sustainability & governance briefs) ----------
+  var esgItems = {
+    climate: [
+      {code:'NZT / 01', tag:'sustain', tagLabel:'Targets', title:'Corporate net-zero interim targets keep slipping past their original dates', body:'A growing share of 2030 interim climate targets are being quietly pushed to 2035 or later as companies discover Scope 3 measurement is far harder than the pledge implied.'},
+      {code:'VCM / 02', tag:'sustain', tagLabel:'Carbon Markets', title:'Carbon-credit integrity fights are reshaping which offsets buyers will touch', body:'After a string of high-profile integrity scandals, corporate buyers are shifting demand toward verified removal-based credits and away from cheaper avoidance-based offsets.'},
+      {code:'PCR / 03', tag:'risk', tagLabel:'Physical Risk', title:'Physical climate-risk disclosure is catching up to transition-risk disclosure', body:'Insurers and regulators are pushing companies to quantify asset-level exposure to flooding, heat, and wildfire — not just the cost of decarbonizing operations.'}
+    ],
+    governance: [
+      {code:'CSRD / 04', tag:'sustain', tagLabel:'Regulation', title:'CSRD’s phased rollout keeps catching non-EU firms off guard', body:'Companies headquartered outside the EU are only now discovering that a single EU subsidiary can pull the entire group into scope of the Corporate Sustainability Reporting Directive.'},
+      {code:'MAT / 05', tag:'sustain', tagLabel:'Disclosure', title:'Double materiality assessments are the actual bottleneck in ESG reporting', body:'Data collection turns out to be the easy part — most reporting teams are stalling on the judgment call of what counts as materially relevant, in both financial and impact terms.'},
+      {code:'ASR / 06', tag:'risk', tagLabel:'Assurance', title:'External assurance for sustainability data is catching up to financial-audit rigor', body:'New assurance mandates are forcing ESG data pipelines to adopt the same control discipline long required of financial statements, exposing gaps most sustainability teams hadn’t had to close before.'}
+    ],
+    social: [
+      {code:'LWG / 07', tag:'sustain', tagLabel:'Labor', title:'Living-wage commitments are spreading faster than verification capacity', body:'Apparel brands are announcing living-wage pledges faster than third-party audit infrastructure can actually confirm suppliers are paying them.'},
+      {code:'CSDD / 08', tag:'risk', tagLabel:'Compliance', title:'Human rights due-diligence laws are pulling labor risk into the boardroom', body:'CSDDD-style legislation is moving supply-chain labor accountability out of CSR teams and into board-level liability, changing who actually owns the risk.'},
+      {code:'RCF / 09', tag:'risk', tagLabel:'Labor', title:'Migrant recruitment fees remain the most under-addressed labor risk in two sectors', body:'Despite years of "no recruitment fee" pledges, enforcement gaps persist heavily in electronics assembly and agricultural labor supply chains.'}
+    ],
+    finance: [
+      {code:'SLL / 10', tag:'sustain', tagLabel:'Finance', title:'Sustainability-linked loans face scrutiny over how toothless some targets are', body:'Rating agencies and investors are increasingly penalizing loans whose sustainability-linked KPIs were set easy enough to hit without real effort.'},
+      {code:'GRB / 11', tag:'freight', tagLabel:'Green Bonds', title:'Green bond issuance keeps growing faster than use-of-proceeds reporting quality', body:'The market is scaling faster than the reporting discipline needed to keep it credible, widening the gap between issuance volume and verifiable impact.'},
+      {code:'TRF / 12', tag:'sustain', tagLabel:'Finance', title:'Transition finance is emerging as its own category, distinct from green finance', body:'Capital earmarked specifically to help high-emitting sectors credibly decarbonize is being treated differently from funding for projects that were already clean.'}
+    ]
+  };
+
+  function timeAgo(iso){
+    if(!iso) return '';
+    var mins = Math.max(1, Math.round((Date.now() - new Date(iso).getTime())/60000));
+    if(mins < 60) return mins + 'm ago';
+    var hrs = Math.round(mins/60);
+    if(hrs < 24) return hrs + 'h ago';
+    return Math.round(hrs/24) + 'd ago';
+  }
+
+  function renderNewsItems(listEl, items){
+    listEl.innerHTML = '';
+    if(!items.length){
+      listEl.innerHTML = '<li class="dispatch"><div><p>No items to show right now.</p></div></li>';
+      return;
+    }
+    items.forEach(function(item){
+      var li = document.createElement('li');
+      li.className = 'dispatch';
+      var tagClass = item.tag === 'freight' ? 'freight' : (item.tag === 'risk' ? 'risk' : '');
+      var titleHtml = item.url
+        ? '<a href="' + item.url + '" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">' + item.title + '</a>'
+        : item.title;
+      li.innerHTML =
+        '<span class="dispatch-code">' + item.code + (item.publishedAt ? '<br>' + timeAgo(item.publishedAt) : '') + '</span>' +
+        '<div><h3>' + titleHtml + '</h3><p>' + item.body + '</p></div>' +
+        '<span class="dispatch-tag ' + tagClass + '">' + item.tagLabel + '</span>';
+      listEl.appendChild(li);
+    });
+  }
+
+  // One controller drives both live boards — same fetch/fallback behavior, different param and data.
+  function initNewsBoard(cfg){
+    var listEl = document.getElementById(cfg.listId);
+    var metaEl = document.getElementById(cfg.metaId);
+    var footEl = document.getElementById(cfg.footId);
+    var tabsEl = document.getElementById(cfg.tabsId);
+
+    function load(key){
+      renderNewsItems(listEl, cfg.items[key]);
+      metaEl.innerHTML = '<span class="live-dot"></span>Loading live dispatch…';
+
+      fetch('/api/news?' + cfg.param + '=' + key)
+        .then(function(res){
+          if(!res.ok) return res.json().then(function(d){ throw new Error(d.error || 'Request failed'); });
+          return res.json();
+        })
+        .then(function(data){
+          if(!data.items || !data.items.length) throw new Error('Empty feed');
+          renderNewsItems(listEl, data.items);
+          metaEl.innerHTML = '<span class="live-dot"></span>Live — via NewsAPI.org';
+          footEl.textContent = 'Live headlines, refreshed on each tab switch. Curated fallback briefs are shown automatically if the feed is unavailable.';
+        })
+        .catch(function(err){
+          // Expected when opened as a local file, or before NEWS_API_KEY is set on Netlify.
+          renderNewsItems(listEl, cfg.items[key]);
+          metaEl.innerHTML = '<span class="live-dot" style="background:var(--fg-faint);animation:none;"></span>Curated fallback — live feed unavailable';
+          footEl.textContent = 'This board is showing hand-curated briefs. Deploy to Netlify with a NEWS_API_KEY environment variable to switch on the live feed — see netlify/functions/news.js.';
+        });
+    }
+
+    load(cfg.defaultKey);
+    tabsEl.addEventListener('click', function(e){
+      var btn = e.target.closest('.tab');
+      if(!btn) return;
+      tabsEl.querySelectorAll('.tab').forEach(function(t){ t.setAttribute('aria-selected','false'); });
+      btn.setAttribute('aria-selected','true');
+      load(btn.dataset.key);
+    });
+  }
+
+  initNewsBoard({tabsId:'regionTabs', listId:'dispatchList', metaId:'boardMeta', footId:'boardFoot', param:'region', items:dispatches, defaultKey:'apac'});
+  initNewsBoard({tabsId:'esgTabs', listId:'esgList', metaId:'esgBoardMeta', footId:'esgBoardFoot', param:'topic', items:esgItems, defaultKey:'climate'});
+
+  // ---------- Sustainability dossier data ----------
+  var files = [
+    {
+      id:'F-01', title:'Decarbonizing the invisible 90%', sub:'Scope 3 & freight emissions',
+      stat:{val:'>90%', label:'of a typical retail or consumer-goods firm’s carbon footprint sits in its value chain rather than its own operations, per CDP’s supply chain research'},
+      body:[
+        'Most companies can tell you fairly precisely how much carbon their offices and factories emit. Almost none can tell you, with the same precision, what their suppliers’ suppliers emitted to make the raw materials in the first place. That gap is Scope 3 — indirect emissions from purchased goods, transport, and end-of-life disposal — and for manufacturers, retailers, and food companies it is routinely the largest slice of the footprint by far.',
+        'Ocean freight is comparatively carbon-efficient per tonne-kilometer, which is why the industry’s decarbonization fight is concentrated elsewhere: in air freight used to compensate for poor planning, in last-mile delivery, and in the energy intensity of the factories making the goods before they ever reach a ship. Slow steaming, alternative marine fuels, and electrified port equipment help, but the biggest lever is often the boring one — better demand forecasting that reduces the express shipments and rush orders that blow up a freight carbon budget in the first place.'
+      ]
+    },
+    {
+      id:'F-02', title:'Designing for the return trip', sub:'Circularity & reverse logistics',
+      stat:{val:'7.2%', label:'of the materials the global economy consumes are cycled back as secondary materials — and the rate is falling, not rising (Circularity Gap Report 2024)'},
+      body:[
+        'A linear supply chain is built for one direction: raw material to factory to shelf to landfill. A circular one has to be built for the return trip too — take-back programs, refurbishment, material recovery — and that reverse leg is usually the part nobody budgeted for. Reverse logistics networks are typically slower, more fragmented, and harder to route than forward ones, because the "inventory" arrives in unpredictable condition and unpredictable volume.',
+        'The companies making real progress here tend to treat circularity as a design constraint, not an afterthought: modular products that are easy to disassemble, packaging chosen for recyclability rather than shelf appeal, and contracts with suppliers that specify recycled-content minimums. None of it works without a logistics network capable of getting the material back — which is why circularity is, underneath the sustainability language, mostly a supply-chain engineering problem.'
+      ]
+    },
+    {
+      id:'F-03', title:'Sourcing that survives an audit', sub:'Ethical & regenerative sourcing',
+      stat:{val:'3+ tiers', label:'deep is typically where forced-labor and unpermitted-subcontracting risk actually concentrates — well past tier one'},
+      body:[
+        'Tier-one suppliers — the factory that puts your logo on the box — are the easiest to audit and, by now, usually the least risky link in the chain. The harder problems live upstream: the mine supplying the mineral, the farm supplying the raw cotton, the subcontractor a tier-one supplier quietly brought in during a demand spike without telling anyone. Traceability past tier one is the single hardest and most expensive part of ethical sourcing, and it is exactly where most compliance failures are eventually found.',
+        'Regenerative sourcing pushes the standard further still — beyond "did no harm" toward agricultural and extraction practices that actively rebuild soil health, watershed function, or biodiversity. It is a smaller and newer segment of the market, concentrated so far in food and apparel raw materials, but it is the direction the more ambitious sustainability commitments are heading once basic due diligence is in place.'
+      ]
+    },
+    {
+      id:'F-04', title:'Routing around a changing planet', sub:'Climate-resilient logistics',
+      stat:{val:'2 canals', label:'now carry recurring climate-driven transit restrictions — Panama (drought) and, functionally, Suez (rerouted around conflict)'},
+      body:[
+        'Supply-chain resilience used to mean having a backup supplier. Increasingly it means having a backup route, because the physical infrastructure of global trade — canals, rivers, coastal ports — is itself exposed to climate variability. Panama Canal transit restrictions during drought years and low Rhine water levels are no longer once-a-decade anomalies; they are recurring planning inputs that logistics teams now build contingency capacity around by default.',
+        'This is the point where climate adaptation and supply-chain strategy stop being separate conversations. A resilient network today needs diversified routing options, safety stock calibrated to climate-driven disruption rather than just demand variance, and supplier relationships spread across enough geography that one flooded river or one drought year cannot stall the whole chain.'
+      ]
+    },
+    {
+      id:'F-05', title:'The paperwork is the point', sub:'Disclosure & regulation',
+      stat:{val:'3 regimes', label:'now push emissions and sourcing data deep into supply chains at once — EU CBAM, EU CSRD, and US import forced-labor rules'},
+      body:[
+        'For years, "sustainable supply chain" was largely a marketing claim, voluntary and loosely verified. That is changing fast. The EU’s Carbon Border Adjustment Mechanism now requires importers of certain goods to report embedded emissions, effectively forcing suppliers outside the EU to start measuring carbon they never had to measure before. The Corporate Sustainability Reporting Directive is pulling the same thread on a broader set of environmental and social metrics for large EU-listed companies and their supply chains.',
+        'In the US, import restrictions tied to forced-labor risk are having a similar effect on sourcing transparency, requiring proof of origin multiple tiers upstream. None of these regimes were designed primarily as climate or human-rights policy in the abstract — they are trade rules with disclosure teeth, and they are turning supply-chain mapping from a nice-to-have into a customs requirement.'
+      ]
+    },
+    {
+      id:'F-06', title:'What the software can actually fix', sub:'Technology as an enabler',
+      stat:{val:'2 levers', label:'do most of the practical work today — better demand forecasting, and traceability records suppliers cannot quietly edit'},
+      body:[
+        'It is tempting to reach for blockchain and AI as the headline answer to supply-chain sustainability, and both have a real role — but a narrower one than the marketing suggests. Demand-forecasting models that cut overproduction and last-minute air freight deliver measurable emissions savings today, quietly, without anyone needing to say the word "AI" on a sustainability slide. Digital product passports and shared, tamper-resistant traceability records make tier-two and tier-three sourcing claims verifiable rather than self-reported, which is the actual bottleneck most compliance teams face.',
+        'The unglamorous truth is that most sustainability failures in supply chains are visibility failures, not technology failures — nobody could see the problem in time, not because the tools didn’t exist, but because nobody had connected supplier data across the tiers where the risk actually lived. Software’s biggest contribution, so far, has been closing that visibility gap rather than inventing anything new to measure.'
+      ]
+    },
+    {
+      id:'F-07', title:'The water nobody puts on the label', sub:'Water stress in agricultural & industrial sourcing',
+      stat:{val:'~70%', label:'of global freshwater withdrawals go to agriculture (FAO) — much of it embedded, invisibly, in the food and fiber that move through supply chains'},
+      body:[
+        'A cotton shirt or a bag of almonds carries a water footprint most buyers never see, because the water was spent long before the product entered a shipping container — in the field, or in the tannery, or on the wafer-fabrication line. Semiconductor fabs in particular are extraordinarily water-intensive, which is why chip manufacturing clusters so heavily around regions with reliable, ultra-pure water supply. The uncomfortable overlap is that several of the world’s largest sourcing regions for cotton, food crops, and electronics sit squarely inside areas already classified as water-stressed.',
+        'Certification labels like "water-neutral" are frequently criticized for measuring the wrong thing — an average across a company’s footprint rather than the actual condition of the specific watershed a factory or farm draws from. The more rigorous approach, context-based water targets, sets goals relative to local water stress rather than a single global number, and it is slowly displacing blanket offset-style claims as buyers and regulators get more literate about the difference between "we reduced water use somewhere" and "we stopped straining this particular river."'
+      ]
+    },
+    {
+      id:'F-08', title:'Packaging built to survive the journey', sub:'Packaging waste & the shift to reusable systems',
+      stat:{val:'~36%', label:'of all plastics produced go into packaging, the largest single use of plastic (UNEP) — and a large share of it exists purely to survive the supply chain'},
+      body:[
+        'Packaging is rarely designed for the customer first; it is designed for the forklift, the pallet, the truck, and the three or four handoffs a product survives before it reaches a shelf. That constraint is why lightweighting has limits — strip out too much material and the failure shows up as damaged goods and returns, which usually costs more carbon than the packaging saved. E-commerce has made this worse in one specific way: a single item shipped direct-to-door now carries packaging overhead that bulk pallet shipping to a retail store never required.',
+        'The more durable fix running through the industry is reusable packaging pools — pallets, crates, and totes that circulate between known partners rather than being discarded after one trip — which work well in closed business-to-business loops but are far harder to pull off in last-mile consumer delivery, where the packaging leaves a controlled network and rarely comes back. Extended Producer Responsibility laws are starting to shift the calculus regardless, by making producers financially liable for what happens to packaging after the sale, which is nudging packaging design decisions upstream to the same teams that once treated it as an afterthought.'
+      ]
+    },
+    {
+      id:'F-09', title:'Who actually made it', sub:'Labor conditions in high-exposure industries',
+      stat:{val:'2 industries', label:'account for a disproportionate share of documented labor-rights findings in global supply chains: garment manufacturing and electronics assembly'},
+      body:[
+        'Labor risk in supply chains concentrates predictably — in labor-intensive, low-margin, heavily subcontracted industries where a factory competing on price has few levers left besides labor cost. Garment manufacturing and electronics assembly show up disproportionately in labor-rights findings for exactly that reason, and subcontracting is what usually breaks the audit trail: a certified, audited factory can quietly route overflow orders to an unaudited subcontractor during a demand spike, and the brand’s paperwork never reflects it.',
+        'Traditional social-compliance audits — a scheduled inspection, a checklist, a certificate — have a well-documented weakness: they are relatively easy to prepare for and can miss conditions that only show up on an unannounced visit or during a workload surge. The programs showing stronger results tend to be worker-driven ones, where workers themselves hold a binding, enforceable complaint mechanism rather than relying solely on a third-party auditor’s snapshot. It is a smaller model than certification, but it addresses the exact failure mode — gameable audits — that certification alone has struggled to solve.'
+      ]
+    }
+  ];
+
+  function renderDossier(){
+    var wrap = document.getElementById('dossierList');
+    files.forEach(function(f, i){
+      var el = document.createElement('div');
+      el.className = 'file';
+      el.id = f.id;
+      el.dataset.open = i === 0 ? 'true' : 'false';
+      el.innerHTML =
+        '<button class="file-head" aria-expanded="' + (i===0?'true':'false') + '">' +
+          '<span class="file-id">' + f.id + '</span>' +
+          '<h3>' + f.title + '<span class="file-sub">' + f.sub + '</span></h3>' +
+          '<span class="chevron">+</span>' +
+        '</button>' +
+        '<div class="file-body"><div class="file-body-inner">' +
+          '<div>' + f.body.map(function(p){ return '<p>'+p+'</p>'; }).join('') + '</div>' +
+          '<div class="file-stat"><b>' + f.stat.val + '</b><span>' + f.stat.label + '</span></div>' +
+        '</div></div>';
+      wrap.appendChild(el);
+      el.querySelector('.file-head').addEventListener('click', function(){
+        var isOpen = el.dataset.open === 'true';
+        el.dataset.open = isOpen ? 'false' : 'true';
+        this.setAttribute('aria-expanded', String(!isOpen));
+      });
+    });
+  }
+  renderDossier();
+
+  // ---------- SAP Primer: Procure-to-Pay flow ----------
+  var flowSteps = [
+    {code:'MD04', title:'Determine the requirement', body:'The nightly MRP run (or a manual request, or a maintenance/production order) sees a shortfall and creates a Purchase Requisition — an internal ask, not yet a legal document.'},
+    {code:'ME54N', title:'Release the requisition', body:'Requisitions above a value threshold sit blocked by a release strategy until an authorized approver signs off in ME54N.'},
+    {code:'ME01', title:'Check the source list', body:'The buyer checks whether an approved, possibly fixed, source already exists for this material at this plant before doing anything else.'},
+    {code:'ME41', title:'Solicit quotes, if needed', body:'With no fixed source, the buyer sends a Request for Quotation to multiple vendors and records responses for side-by-side comparison.'},
+    {code:'ME21N', title:'Issue the purchase order', body:'The requisition — or the winning quotation — converts into a Purchase Order: now a binding commercial document sent to the vendor.'},
+    {code:'ME29N', title:'Release the order', body:'A PO over its own value threshold requires sign-off before it can be transmitted to the vendor.'},
+    {code:'MIGO', title:'Post the goods receipt', body:'When the shipment arrives, the warehouse posts a goods receipt against the PO — stock increases, and a GR/IR clearing entry opens automatically.'},
+    {code:'MIRO', title:'Verify the invoice, then pay', body:'Accounts payable three-way matches the vendor invoice against the PO and the goods receipt; once it clears, F110 batches it into the next payment run.'}
+  ];
+  function renderFlowSteps(listId, steps){
+    var wrap = document.getElementById(listId);
+    steps.forEach(function(s, i){
+      var el = document.createElement('div');
+      el.className = 'flow-step';
+      el.innerHTML =
+        '<span class="flow-num">' + String(i+1).padStart(2,'0') + '</span>' +
+        '<span class="flow-code">' + s.code + '</span>' +
+        '<div><h4>' + s.title + '</h4><p>' + s.body + '</p></div>';
+      wrap.appendChild(el);
+    });
+  }
+  renderFlowSteps('flowList', flowSteps);
+
+  // ---------- SAP Primer: T-code ledger ----------
+  var tcodeGroups = [
+    { label:'Master data', rows:[
+      ['MM01 / 02 / 03', 'Material Master', 'The material’s system identity — units of measure, valuation class, purchasing and MRP views. Nothing downstream works without it.'],
+      ['XK01 / 02 / 03', 'Vendor Master (centralized)', 'A supplier’s banking, tax, and purchasing data in one record, shared across purchasing and finance.'],
+      ['ME11 / 12 / 13', 'Purchasing Info Record', 'The agreed price and lead time between one vendor and one material — what the system checks before anyone renegotiates from scratch.'],
+      ['ME01', 'Maintain Source List', 'The approved vendors for a material at a given plant, and whether one is flagged as the fixed default source.']
+    ]},
+    { label:'Sourcing', rows:[
+      ['ME41 / 42 / 43', 'RFQ (Create/Change/Display)', 'A formal request for a price quote, sent to one or more vendors for a material with no fixed source.'],
+      ['ME47', 'Maintain Quotation', 'Where a vendor’s quoted price and terms are recorded against the RFQ.'],
+      ['ME49', 'Price Comparison', 'Lines competing quotations up side by side so the buyer can weigh more than price alone.']
+    ]},
+    { label:'Purchasing', rows:[
+      ['ME51N / 52N / 53N', 'Purchase Requisition', 'The internal request to buy — not yet visible to any vendor.'],
+      ['ME54N', 'Release Purchase Requisition', 'Approves a requisition blocked by a release strategy, usually triggered by its value.'],
+      ['ME21N / 22N / 23N', 'Purchase Order', 'The binding order sent to a vendor, built from a requisition, a quotation, or from scratch.'],
+      ['ME28 / 29N', 'Release Purchase Order', 'Approves a PO over the value threshold requiring sign-off before it can be transmitted.'],
+      ['ME2M / ME2N', 'PO Reporting (by Material / by PO)', 'List views used to track open, overdue, or partially delivered orders.']
+    ]},
+    { label:'Inventory & goods movement', rows:[
+      ['MIGO', 'Goods Movement', 'The single-screen transaction for posting a goods receipt, issue, or transfer — where system stock starts matching floor stock.'],
+      ['MB1A / 1B / 1C', 'Goods Issue / Transfer / Other Receipt', 'Older, single-purpose predecessors to MIGO — still worth recognizing in training material and legacy processes.'],
+      ['MMBE', 'Stock Overview', 'Real-time stock by plant, storage location, and batch — the first screen anyone checks before asking "do we actually have this?"'],
+      ['MB52', 'Warehouse Stock', 'A broader list of stock on hand than MMBE’s single-material view, useful for a wider inventory sweep.']
+    ]},
+    { label:'Invoice & payment', rows:[
+      ['MIRO', 'Enter Incoming Invoice', 'Logistics Invoice Verification — matches the vendor invoice against the PO and goods receipt before it’s payable.'],
+      ['MIR7', 'Park Invoice', 'Saves an invoice as a draft when something doesn’t match yet, without posting it to the books.'],
+      ['MR8M', 'Cancel Invoice Document', 'Reverses an invoice posted in error, restoring the PO and GR quantities it was matched against.'],
+      ['F110', 'Automatic Payment Run', 'Batches approved open invoices into an actual payment run, by due date and payment method.']
+    ]},
+    { label:'Evaluation', rows:[
+      ['ME61', 'Maintain Vendor Evaluation', 'Scores a vendor on price, quality, delivery, and service — checked before making them the default source next time.']
+    ]}
+  ];
+  function renderLedgerGroups(listId, groups){
+    var wrap = document.getElementById(listId);
+    groups.forEach(function(group){
+      var g = document.createElement('div');
+      g.className = 'ledger-group';
+      var rowsHtml = group.rows.map(function(r){
+        return '<div class="ledger-row"><span class="ledger-code">' + r[0] + '</span><span class="ledger-name">' + r[1] + '</span><span class="ledger-desc">' + r[2] + '</span></div>';
+      }).join('');
+      g.innerHTML = '<div class="ledger-group-label">' + group.label + '</div>' + rowsHtml;
+      wrap.appendChild(g);
+    });
+  }
+  renderLedgerGroups('ledgerList', tcodeGroups);
+
+  // ---------- SAP Ariba: what's advancing + how it fits the operational core ----------
+  var aribaFlowSteps = [
+    {code:'Q4 2025', title:'Intelligent Contracting goes live', body:'Joule extracts key terms from a contract, generates a plain-language summary, and searches historical agreements for discrepancies and compliance issues automatically.'},
+    {code:'Q4 2025', title:'Simplified invoice creation ships', body:'Employees outside accounts payable can submit an invoice straight from SAP Cloud ERP with minimal manual input — Joule handles the structuring behind it.'},
+    {code:'Q1 2026', title:'Bid Analysis Agent reaches general availability', body:'A Joule agent compares supplier bids on total cost — unit price, shipping, payment terms — surfacing trade-offs manual side-by-side review routinely misses.'},
+    {code:'Q1 2026', title:'AI supplier response summaries roll out', body:'Joule condenses long supplier questionnaire responses into a consolidated view, so risk and compliance reviewers can move faster without re-reading every submission.'},
+    {code:'2026–27', title:'Rollout continues incrementally', body:'SAP has said further Joule-driven sourcing and contracting capability will keep shipping through 2027, letting customers adopt at their own pace rather than in one release event.'}
+  ];
+  renderFlowSteps('aribaFlow', aribaFlowSteps);
+
+  var aribaGroups = [
+    { label:'SAP Ariba — the strategic layer', rows:[
+      ['Ariba Sourcing', 'RFPs, RFQs & reverse auctions', 'Where competitive bidding happens before a purchase order exists — an awarded price here feeds straight into the PO on the S/4HANA side.'],
+      ['Ariba Contracts', 'Contract authoring & compliance', 'Stores negotiated terms and, with Joule, extracts and cross-checks them against past agreements automatically.'],
+      ['Ariba Supplier Risk', 'Supplier risk & sustainability scoring', 'Screens suppliers on financial, compliance, and ESG risk — often via third-party data like EcoVadis — before they’re approved to trade.'],
+      ['Business Network', 'Buyer-supplier connectivity', 'The transaction pipe formerly branded Ariba Network — over 5 million buyers and suppliers exchanging orders, invoices, and catalogs.']
+    ]},
+    { label:'S/4HANA Sourcing & Procurement — the operational core', rows:[
+      ['ME21N → MIGO → MIRO', 'Purchase order → receipt → invoice', 'The transactional backbone from the SAP Primer above — where an Ariba-negotiated deal actually turns into inventory and a paid invoice.'],
+      ['Material & Vendor Master', 'Shared master data', 'Both systems read the same underlying material and vendor records, which is what keeps an Ariba-sourced deal and an S/4HANA purchase order in sync.']
+    ]}
+  ];
+  renderLedgerGroups('aribaLedger', aribaGroups);
+
+  // ---------- SAP Primer: case-file walkthrough ----------
+  var caseSteps = [
+    {code:'MD04', title:'MRP flags the shortfall', body:'The nightly run sees planned consumption will outpace on-hand coil by day 12 and auto-generates Purchase Requisition 10004532 for 50 metric tons of Grade S355 hot-rolled coil.'},
+    {code:'ME54N', title:'Requisition sits for release', body:'At current market pricing, 50 tons crosses the plant’s auto-release threshold, so the requisition is blocked until the procurement manager releases it.'},
+    {code:'ME01 / ME11', title:'Source check comes back open', body:'Two vendors are approved for this mill spec, but neither is flagged as the fixed source — so price and performance are both still in play.'},
+    {code:'ME41 / ME47 / ME49', title:'Three RFQs go out', body:'The buyer solicits quotes from three qualified vendors. Vendor A comes back 4% cheaper on unit price, but its ME61 evaluation score for on-time delivery is noticeably weaker than Vendor B’s.'},
+    {code:'ME21N', title:'PO awarded to Vendor B', body:'Purchase Order 4500019876 goes to Vendor B for 50 metric tons, delivery in nine days — a slightly higher landed cost than Vendor A’s quote, traded for reliability.'},
+    {code:'ME29N', title:'PO clears its own release', body:'The order value crosses the plant controller’s sign-off threshold too; it’s approved and transmitted to Vendor B the same afternoon.'},
+    {code:'MIGO', title:'Coil arrives, goods receipt posted', body:'Nine days later the warehouse posts a goods receipt against the PO using movement type 101 — stock in MMBE jumps by 50 tons, and a GR/IR clearing entry opens for the expected invoice.'},
+    {code:'MIRO', title:'Invoice verification catches a mismatch', body:'Vendor B’s invoice shows 50.2 tons at a price 1.5% above the PO rate. The 0.2-ton overage is inside tolerance and clears automatically — the price variance isn’t, and the invoice blocks for buyer review.'},
+    {code:'F110', title:'Block resolved, payment released', body:'The buyer confirms the 1.5% was a pre-agreed freight surcharge missing from the original PO, releases the block, and the invoice joins the next F110 payment run — closing the GR/IR account.'},
+    {code:'ME61', title:'Vendor evaluation updates', body:'The on-time, in-full delivery and the resolved (not disputed) price variance both feed Vendor B’s evaluation score for the next sourcing decision.'}
+  ];
+  (function renderCase(){
+    var wrap = document.getElementById('caseTimeline');
+    caseSteps.forEach(function(s){
+      var el = document.createElement('div');
+      el.className = 'case-step';
+      el.innerHTML =
+        '<div class="case-step-head"><h4>' + s.title + '</h4><span class="case-step-code">' + s.code + '</span></div>' +
+        '<p>' + s.body + '</p>';
+      wrap.appendChild(el);
+    });
+  })();
+
+  // ---------- Glossary ----------
+  var terms = [
+    ['Scope 1, 2 & 3', 'Scope 1 is emissions a company creates directly; Scope 2 is from the energy it buys; Scope 3 is everything in its supply chain — usually the largest and hardest to measure.'],
+    ['CBAM', 'The EU’s Carbon Border Adjustment Mechanism, which prices imports on their embedded carbon to prevent firms shifting production to less-regulated countries.'],
+    ['CSRD', 'The EU’s Corporate Sustainability Reporting Directive, requiring large companies to disclose detailed environmental and social data, including supply-chain impacts.'],
+    ['Nearshoring', 'Relocating production closer to the end market to cut transit time, freight emissions, and exposure to distant disruptions.'],
+    ['Circular economy', 'An economic model that designs products and materials to be reused, repaired, or recycled rather than discarded after one use.'],
+    ['EPR', 'Extended Producer Responsibility — regulation making manufacturers financially responsible for the end-of-life disposal of their products.'],
+    ['Tier-N supplier', 'Distance from the finished product: tier one supplies the brand directly, tier two supplies tier one, and so on upstream.'],
+    ['Digital product passport', 'A shared digital record of a product’s materials, origin, and footprint, designed to travel with it through the supply chain.']
+  ];
+  var gl = document.getElementById('glossaryList');
+  terms.forEach(function(t){
+    var d = document.createElement('div');
+    d.className = 'term';
+    d.innerHTML = '<dt>' + t[0] + '</dt><dd>' + t[1] + '</dd>';
+    gl.appendChild(d);
+  });
+
+  // ---------- Subscribe mock ----------
+  document.getElementById('subForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    document.getElementById('subNote').textContent = 'Noted — but nothing was actually sent. Connect this form to an email provider to make it real.';
+  });
+
+  // ---------- Hero route canvas ----------
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  (function heroCanvas(){
+    var c = document.getElementById('routeCanvas');
+    var ctx = c.getContext('2d');
+    var w, h, dpr = Math.min(window.devicePixelRatio || 1, 2);
+    function resize(){
+      w = c.parentElement.clientWidth; h = c.parentElement.clientHeight;
+      c.width = w*dpr; c.height = h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+    resize(); window.addEventListener('resize', resize);
+    var ports = [];
+    var n = 9;
+    for(var i=0;i<n;i++){
+      ports.push({x: Math.random()*w, y: h*0.25 + Math.random()*h*0.6});
+    }
+    var routes = [];
+    for(i=0;i<14;i++){
+      routes.push({a: ports[Math.floor(Math.random()*n)], b: ports[Math.floor(Math.random()*n)], t: Math.random(), speed: 0.0015 + Math.random()*0.002});
+    }
+    function draw(){
+      ctx.clearRect(0,0,w,h);
+      ctx.strokeStyle = 'rgba(233,228,213,0.10)';
+      ctx.lineWidth = 1;
+      routes.forEach(function(r){
+        ctx.beginPath();
+        var mx = (r.a.x+r.b.x)/2, my = Math.min(r.a.y,r.b.y) - 40;
+        ctx.moveTo(r.a.x, r.a.y);
+        ctx.quadraticCurveTo(mx, my, r.b.x, r.b.y);
+        ctx.stroke();
+      });
+      ports.forEach(function(p){
+        ctx.beginPath(); ctx.arc(p.x,p.y,2.4,0,7);
+        ctx.fillStyle = 'rgba(233,228,213,0.55)'; ctx.fill();
+      });
+      if(!reduceMotion){
+        routes.forEach(function(r){
+          r.t += r.speed; if(r.t>1) r.t=0;
+          var mx = (r.a.x+r.b.x)/2, my = Math.min(r.a.y,r.b.y) - 40;
+          var t = r.t;
+          var x = (1-t)*(1-t)*r.a.x + 2*(1-t)*t*mx + t*t*r.b.x;
+          var y = (1-t)*(1-t)*r.a.y + 2*(1-t)*t*my + t*t*r.b.y;
+          ctx.beginPath(); ctx.arc(x,y,2,0,7);
+          ctx.fillStyle = '#E08544'; ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+    }
+    draw();
+  })();
+
+  // ---------- Signal Map: SDG grid ----------
+  var sdgGoals = [
+    {n:1, name:'No Poverty', desc:'End poverty in all its forms everywhere.'},
+    {n:2, name:'Zero Hunger', desc:'End hunger, achieve food security and better nutrition.'},
+    {n:3, name:'Good Health and Well-being', desc:'Ensure healthy lives and promote well-being for all.'},
+    {n:4, name:'Quality Education', desc:'Ensure inclusive, equitable, quality education for all.'},
+    {n:5, name:'Gender Equality', desc:'Achieve gender equality and empower women and girls.'},
+    {n:6, name:'Clean Water and Sanitation', desc:'Ensure availability of water and sanitation for all.', core:true, tie:'F-07', tieLabel:'Case File F-07 — Water stewardship'},
+    {n:7, name:'Affordable and Clean Energy', desc:'Ensure access to affordable, reliable, sustainable energy.', core:true, tie:'F-01', tieLabel:'Case File F-01 — Decarbonization'},
+    {n:8, name:'Decent Work and Economic Growth', desc:'Promote sustained, inclusive economic growth and decent work.', core:true, tie:'F-09', tieLabel:'Case File F-09 — Labor conditions'},
+    {n:9, name:'Industry, Innovation and Infrastructure', desc:'Build resilient infrastructure, promote sustainable industrialization.', core:true, tie:'F-06', tieLabel:'Case File F-06 — Technology as enabler'},
+    {n:10, name:'Reduced Inequalities', desc:'Reduce inequality within and among countries.'},
+    {n:11, name:'Sustainable Cities and Communities', desc:'Make cities and human settlements inclusive and resilient.'},
+    {n:12, name:'Responsible Consumption and Production', desc:'Ensure sustainable consumption and production patterns.', core:true, tie:'F-02', tieLabel:'Case File F-02 — Circularity'},
+    {n:13, name:'Climate Action', desc:'Take urgent action to combat climate change and its impacts.', core:true, tie:'F-04', tieLabel:'Case File F-04 — Climate-resilient routing'},
+    {n:14, name:'Life Below Water', desc:'Conserve and sustainably use the oceans and marine resources.'},
+    {n:15, name:'Life on Land', desc:'Protect, restore and promote sustainable use of ecosystems.'},
+    {n:16, name:'Peace, Justice and Strong Institutions', desc:'Promote peaceful, inclusive societies and accountable institutions.'},
+    {n:17, name:'Partnerships for the Goals', desc:'Strengthen the means of implementation and global partnership.', core:true, tie:'F-05', tieLabel:'Case File F-05 — Disclosure & regulation'}
+  ];
+  (function renderSdgGrid(){
+    var wrap = document.getElementById('sdgGrid');
+    sdgGoals.forEach(function(g){
+      var el = document.createElement('div');
+      el.className = 'sdg-tile' + (g.core ? ' core' : '');
+      var tieHtml = g.core ? '<a class="file-link" href="#' + g.tie + '">' + g.tieLabel + ' →</a>' : '';
+      var badgeHtml = g.core ? '<span class="sdg-badge">Core</span>' : '';
+      el.innerHTML =
+        badgeHtml +
+        '<span class="sdg-num">SDG ' + String(g.n).padStart(2,'0') + '</span>' +
+        '<span class="sdg-name">' + g.name + '</span>' +
+        '<p class="sdg-desc">' + g.desc + '</p>' +
+        tieHtml;
+      wrap.appendChild(el);
+    });
+  })();
+
+  // ---------- Cross-reference: jump from an SDG tie straight into its open dossier file ----------
+  function openDossierFile(id){
+    var el = document.getElementById(id);
+    if(!el || !el.classList.contains('file')) return;
+    document.querySelectorAll('.file').forEach(function(f){
+      f.dataset.open = 'false';
+      f.querySelector('.file-head').setAttribute('aria-expanded','false');
+    });
+    el.dataset.open = 'true';
+    el.querySelector('.file-head').setAttribute('aria-expanded','true');
+    el.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block:'start'});
+  }
+  window.addEventListener('hashchange', function(){ openDossierFile(location.hash.slice(1)); });
+  if(location.hash) openDossierFile(location.hash.slice(1));
+})();
+</script>
+</body>
+</html>
